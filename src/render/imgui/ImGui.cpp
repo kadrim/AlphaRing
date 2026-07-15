@@ -42,7 +42,10 @@ namespace AlphaRing::Render::ImGui {
         io.IniFilename = "./alpha_ring/imgui.ini";
         ::ImGui::LoadIniSettingsFromDisk("../../../alpha_ring/imgui.ini");
 
-        const float scale = GetDpiForWindow(Graphics()->hwnd) * 1.0f / 96.0f;
+        // Scale the overlay off the actual screen resolution (GetDpiForWindow returns 96 under Proton -> tiny at 4K).
+        // 4K(3840) -> 2.5x, 1440p(2560) -> ~1.67x, 1080p(1920) -> 1.25x. Couch-readable.
+        float scale = (GetSystemMetrics(SM_CXSCREEN) / 1920.0f) * 1.25f;
+        if (scale < 1.0f) scale = 1.0f;
 
         auto font_path = R"(C:\Windows\Fonts\msyh.ttc)";
 
